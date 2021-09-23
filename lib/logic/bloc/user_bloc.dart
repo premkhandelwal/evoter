@@ -43,6 +43,8 @@ class UserBloc extends Bloc<UserEvent, UserState> {
   }
 
   Stream<UserState> _mapUserAddedToState(UserAdded event) async* {
+    yield UserOperationInProgress();
+    
     try {
       final users = await this.apiProvider.addUser(event.user);
       yield users ? UserOperationSuccess() : UserOperationFailure();
@@ -52,6 +54,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
   }
 
   Stream<UserState> _mapUserUpdatedToState(UserUpdated event) async* {
+    yield UserOperationInProgress();
     try {
       final users = await this.apiProvider.updateUser(event.user);
       yield users ? UserOperationSuccess() : UserOperationFailure();

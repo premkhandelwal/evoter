@@ -110,9 +110,7 @@ class _AddUpdateScreenState extends State<AddUpdateScreen> {
                   ),
                 );
               });
-            } else if (state is UserOperationInProgress) {
-              return Center(child: CircularProgressIndicator());
-            }
+            } 
             return Container(
               padding: EdgeInsets.all(20),
               child: SingleChildScrollView(
@@ -131,8 +129,10 @@ class _AddUpdateScreenState extends State<AddUpdateScreen> {
                       decoration: InputDecoration(
                           border: OutlineInputBorder(),
                           labelText: "Name of User",
-                          labelStyle:
-                              TextStyle(fontSize: 20, color: Colors.black54,fontWeight: FontWeight.bold)),
+                          labelStyle: TextStyle(
+                              fontSize: 20,
+                              color: Colors.black54,
+                              fontWeight: FontWeight.bold)),
                     ),
                     SizedBox(
                       height: 30,
@@ -159,7 +159,7 @@ class _AddUpdateScreenState extends State<AddUpdateScreen> {
                       onChanged: (selectedDate) {
                         dateofBirth = selectedDate;
                         dateofBirthController.text =
-                            DateFormat("dd/MM/yyyy").format(selectedDate!);
+                            DateFormat("yyyy-MM-dd").format(selectedDate!);
                       },
                       initialValue: dateofBirth,
                       onShowPicker: (context, currentValue) async {
@@ -256,14 +256,23 @@ class _AddUpdateScreenState extends State<AddUpdateScreen> {
                               fontWeight: FontWeight.bold)),
                     ),
                     SizedBox(
-                      height: 20,
+                      height: 30,
                     ),
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(primary: Colors.red),
-                      onPressed: () async {
-                        if (_formKey.currentState!.validate()) callOperation();
+                    BlocBuilder<UserBloc, UserState>(
+                      builder: (context, state) {
+                        print("state: $state");
+                        if (state is UserOperationInProgress) {
+                          return CircularProgressIndicator();
+                        }
+                        return ElevatedButton(
+                          style: ElevatedButton.styleFrom(primary: Colors.red),
+                          onPressed: () async {
+                            if (_formKey.currentState!.validate())
+                              callOperation();
+                          },
+                          child: Text("Submit"),
+                        );
                       },
-                      child: Text("Submit"),
                     )
                   ],
                 ),
@@ -281,7 +290,7 @@ class _AddUpdateScreenState extends State<AddUpdateScreen> {
             user: User(
                 code: widget.users!.code,
                 address: widget.users!.address,
-                dob: dateofBirthController.text,
+                dob: "${dateofBirthController.text}",
                 mobileNo: userMobileNo.text,
                 gender: gender,
                 name: userName.text),
