@@ -1,16 +1,15 @@
 import 'dart:convert';
-import 'dart:io';
 import 'dart:typed_data';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:evoter/logic/bloc/user_bloc.dart';
 import 'package:evoter/models/user.dart';
 import 'package:evoter/screens/addUpdate_screen.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:path_provider/path_provider.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+  const HomeScreen({
+    Key? key,
+  }) : super(key: key);
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -33,43 +32,55 @@ class _HomeScreenState extends State<HomeScreen> {
     });
     return retString;
   } */
-  List<User?> usersList = [];
+  List<CurrentUser?> usersList = [];
 
   // ImageSource imageSource;
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => AddUpdateScreen(),
-          ));
-        },
-        child: Icon(Icons.add),
-        backgroundColor: Colors.red,
-      ),
-      body: SafeArea(
-        child: BlocBuilder<UserBloc, UserState>(
-          builder: (context, state) {
-            print(state);
-            if (state is UserOperationSuccess || state is UserDeleted) {
-              context.read<UserBloc>().add(UserLoaded());
-              return Center(child: CircularProgressIndicator());
-            } else if (state is UsersLoadInProgress) {
-              return Center(child: CircularProgressIndicator());
-            }  else if (state is UsersLoadSuccess && state.users.isNotEmpty) {
-              print(state.users);
-              usersList = List.from(state.users);
-              return buildGridView();
-            }else if (state is UserOperationFailure) {
-              return Center(
-                child: Text("Failed to load users"),
-              );
-            }
-            return Center(
-              child: Text("No users found",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 25),),
-            );
+    return RefreshIndicator(
+      onRefresh: () async {
+        // if the internet connection is available or not etc..
+        await Future.delayed(
+          Duration(seconds: 2),
+        );
+        context.read<UserBloc>().add(UserLoaded());
+      },
+      child: Scaffold(
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => AddUpdateScreen(),
+            ));
           },
+          child: Icon(Icons.add),
+          backgroundColor: Colors.red,
+        ),
+        body: SafeArea(
+          child: BlocBuilder<UserBloc, UserState>(
+            builder: (context, state) {
+              print(state);
+              if (state is UserOperationSuccess || state is UserDeleted) {
+                context.read<UserBloc>().add(UserLoaded());
+                return Center(child: CircularProgressIndicator());
+              } else if (state is UsersLoadInProgress) {
+                return Center(child: CircularProgressIndicator());
+              } else if (state is UsersLoadSuccess && state.users.isNotEmpty) {
+                print(state.users);
+                usersList = List.from(state.users);
+                return buildGridView();
+              } else if (state is UserOperationFailure) {
+                return Center(
+                  child: Text("Failed to load users"),
+                );
+              }
+              return Center(
+                child: Text(
+                  "No users found",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
+                ),
+              );
+            },
+          ),
         ),
       ),
     );
@@ -94,7 +105,7 @@ class _HomeScreenState extends State<HomeScreen> {
               itemCount: usersList.length,
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 1,
-                childAspectRatio: 1.6,
+                childAspectRatio: 1.4,
                 mainAxisSpacing: 20,
               ),
               itemBuilder: (context, index) {
@@ -147,7 +158,8 @@ class _HomeScreenState extends State<HomeScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        buildRichText("Name: ", "${usersList[index]?.firstName}"),
+        buildRichText("Name: ",
+            "${usersList[index]?.firstName} ${usersList[index]?.middleName} ${usersList[index]?.lastName} "),
         SizedBox(height: 20),
         buildRichText("Mobile No: ", "${usersList[index]?.mobileNo}"),
         SizedBox(height: 20),
@@ -156,6 +168,10 @@ class _HomeScreenState extends State<HomeScreen> {
         buildRichText("Gender: ", "${usersList[index]?.gender}"),
         SizedBox(height: 20),
         buildRichText("Address: ", "${usersList[index]?.address}"),
+        SizedBox(height: 20),
+        usersList[index]?.partNo != null
+            ? buildRichText("Part No: ", "${usersList[index]?.partNo}")
+            : Text("-"),
       ],
     );
   }

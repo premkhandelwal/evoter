@@ -1,7 +1,8 @@
 import 'dart:convert';
 
-class User {
+class CurrentUser {
   String? code;
+  
   String? firstName;
   String? lastName;
   String? middleName = "";
@@ -16,7 +17,7 @@ class User {
   String? addedBy = "";
   String? password = "";
 
-  User(
+  CurrentUser(
       {this.code,
       this.firstName,
       this.lastName,
@@ -35,8 +36,8 @@ class User {
   Map<String, dynamic> toMap() {
     return {
       'FirstName': firstName,
-      'LastName': lastName,
-      'MiddleName': middleName,
+      'LastName':lastName,
+      'MiddleName':middleName,
       'PartNo': partNo,
       'MobileNo': mobileNo,
       'DOB': dob,
@@ -53,16 +54,16 @@ class User {
     };
   }
 
-  static List<User> fromList(List<dynamic> userList) {
-    List<User> retuserList = [];
+  static List<CurrentUser> fromList(List<dynamic> userList) {
+    List<CurrentUser> retuserList = [];
     userList.forEach((map) {
-      retuserList.add(User.fromMap(map));
+      retuserList.add(CurrentUser.fromMap(map));
     });
     return retuserList;
   }
 
-  factory User.fromMap(Map<String, dynamic> map) {
-    return User(
+  factory CurrentUser.fromMap(Map<String, dynamic> map) {
+    return CurrentUser(
         code: map['code'],
         firstName: map['firstName'],
         lastName: map['lastName'],
@@ -74,15 +75,16 @@ class User {
         address: map['address'],
         isAdmin: map['isAdmin'],
         addedBy: map['addedBy'],
-        imageAsString: map["userImageString"]
+        imageAsString: map["userImageString"],
+        password: map['password']
         //isDeleted: map['isDeleted'],
         );
   }
 
   String toJson() => json.encode(toMap());
 
-  static List<User> fromJson(String source) =>
-      User.fromList(json.decode(source));
+  static List<CurrentUser> fromJson(String source) =>
+      CurrentUser.fromList(json.decode(source));
 
   @override
   String toString() {

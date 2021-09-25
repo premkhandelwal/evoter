@@ -6,14 +6,14 @@ abstract class UserEvent {}
 class UserLoaded extends UserEvent {}
 
 class UserAdded extends UserEvent {
-  final User user;
+  final CurrentUser user;
   UserAdded({
     required this.user,
   });
 }
 
 class UserUpdated extends UserEvent {
-  final User user;
+  final CurrentUser user;
   UserUpdated({
     required this.user,
   });
@@ -26,10 +26,10 @@ class UserDeleted extends UserEvent {
   });
 }
 
-class LogIn extends UserEvent{
+class SignInRequested extends UserEvent{
   final String mobileNo;
   final String password;
-  LogIn({
+  SignInRequested({
     required this.mobileNo,
     required this.password,
   });

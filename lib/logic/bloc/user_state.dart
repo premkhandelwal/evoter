@@ -6,7 +6,7 @@ abstract class UserState {}
 class UsersLoadInProgress extends UserState {}
 
 class UsersLoadSuccess extends UserState {
-  final List<User> users;
+  final List<CurrentUser> users;
 
   UsersLoadSuccess( this.users);
 }
@@ -19,7 +19,11 @@ class UserOperationSuccess extends UserState{}
 
 class UserOperationFailure extends UserState{}
 
-class UserLoggedIn extends UserState{}
+class UserLoggingIn extends UserState{}
+
+class UserLoggedIn extends UserState {
+
+}
 
 class UserLogInFailure extends UserState{}
 

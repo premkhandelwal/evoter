@@ -1,3 +1,6 @@
+import 'package:evoter/logic/bloc/user_bloc.dart';
+import 'package:evoter/models/sharedObjects.dart';
+import 'package:evoter/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 // import 'package:tech_teacher/logic/bloc/firebaseauth_bloc.dart';
@@ -12,7 +15,7 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen>
     with TickerProviderStateMixin {
   late TabController tabController;
-  TextEditingController emailid = new TextEditingController();
+  TextEditingController mobileNo = new TextEditingController();
   TextEditingController password = new TextEditingController();
 
   @override
@@ -58,7 +61,7 @@ class _LoginScreenState extends State<LoginScreen>
                         height: 30,
                       ),
                       TextFormField(
-                        controller: emailid,
+                        controller: mobileNo,
                         decoration: InputDecoration(
                             hintStyle: TextStyle(
                               color: Colors.white70,
@@ -68,12 +71,13 @@ class _LoginScreenState extends State<LoginScreen>
                             enabledBorder: UnderlineInputBorder(
                                 borderSide: BorderSide(color: Colors.white)),
                             errorBorder: InputBorder.none,
-                            focusedBorder: InputBorder.none,
-                            hintText: "Registered Email",
+                            focusedBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(color: Colors.white)),
+                            hintText: "Mobile Number",
                             border: OutlineInputBorder(
                                 borderSide: BorderSide(color: Colors.grey))),
                         style: TextStyle(
-                          color: Colors.black,
+                          color: Colors.white,
                           fontSize: 15,
                           fontWeight: FontWeight.w600,
                         ),
@@ -90,8 +94,9 @@ class _LoginScreenState extends State<LoginScreen>
                             enabledBorder: UnderlineInputBorder(
                                 borderSide: BorderSide(color: Colors.white)),
                             errorBorder: InputBorder.none,
-                            focusedBorder: InputBorder.none,
-                            hintText: "Registered Password",
+                            focusedBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(color: Colors.white)),
+                            hintText: "Password",
                             border: OutlineInputBorder(
                                 borderSide: BorderSide(color: Colors.grey))),
                         style: TextStyle(
@@ -103,21 +108,40 @@ class _LoginScreenState extends State<LoginScreen>
                       SizedBox(
                         height: 70,
                       ),
-                      Align(
-                        alignment: Alignment.center,
-                        child: ElevatedButton(
-                            onPressed: () {
-                              // context.read<FirebaseauthBloc>().add(SignInRequested(emailId: emailid.text,password: password.text));
-                            },
-                            child: Text(
-                              "Sign In",
-                            ),
-                            style: ButtonStyle(
-                              fixedSize:
-                                  MaterialStateProperty.all(Size(200, 50)),
-                              backgroundColor:
-                                  MaterialStateProperty.all(Colors.green),
-                            )),
+                      BlocConsumer<UserBloc, UserState>(
+                         listener: (context,state) {
+                          if (state is UserLoggedIn) {
+                            Navigator.pushAndRemoveUntil(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => HomeScreen(),
+                                ),
+                                (route) => false);
+                          }
+                        },
+                        builder: (context, state) {
+                          if (state is UserLoggingIn) {
+                            return CircularProgressIndicator();
+                          }
+                          return Align(
+                            alignment: Alignment.center,
+                            child: ElevatedButton(
+                                onPressed: () {
+                                  context.read<UserBloc>().add(SignInRequested(
+                                      mobileNo: mobileNo.text,
+                                      password: password.text));
+                                },
+                                child: Text(
+                                  "Sign In",
+                                ),
+                                style: ButtonStyle(
+                                  fixedSize:
+                                      MaterialStateProperty.all(Size(200, 50)),
+                                  backgroundColor:
+                                      MaterialStateProperty.all(Colors.green),
+                                )),
+                          );
+                        },
                       )
                     ],
                   ),

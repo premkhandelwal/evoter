@@ -21,7 +21,7 @@ class _AddUserState extends State<AddUser> {
           child: ElevatedButton(
             child: Text("Add"),
             onPressed: () {
-              context.read<UserBloc>().add(UserAdded(user: User()));
+              context.read<UserBloc>().add(UserAdded(user: CurrentUser()));
             },
           ),
         ));
