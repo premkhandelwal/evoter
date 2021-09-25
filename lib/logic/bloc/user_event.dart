@@ -26,4 +26,15 @@ class UserDeleted extends UserEvent {
   });
 }
 
+class LogIn extends UserEvent{
+  final String mobileNo;
+  final String password;
+  LogIn({
+    required this.mobileNo,
+    required this.password,
+  });
+}
+
+class LogOut extends UserEvent{}
+
 

@@ -19,3 +19,9 @@ class UserOperationSuccess extends UserState{}
 
 class UserOperationFailure extends UserState{}
 
+class UserLoggedIn extends UserState{}
+
+class UserLogInFailure extends UserState{}
+
+class UserLoggedOut extends UserState{}
+

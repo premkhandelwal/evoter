@@ -21,10 +21,13 @@ class AddUpdateScreen extends StatefulWidget {
 }
 
 class _AddUpdateScreenState extends State<AddUpdateScreen> {
-  TextEditingController userName = new TextEditingController();
+  TextEditingController firstName = new TextEditingController();
+  TextEditingController middleName = new TextEditingController();
+  TextEditingController lastName = new TextEditingController();
   TextEditingController userAddress = new TextEditingController();
   TextEditingController userMobileNo = new TextEditingController();
   TextEditingController dateofBirthController = new TextEditingController();
+  TextEditingController partNo = new TextEditingController();
   DateTime? dateofBirth;
   String? gender;
   List<String> genders = ["Select Gender", "Male", "Female"];
@@ -33,8 +36,8 @@ class _AddUpdateScreenState extends State<AddUpdateScreen> {
     genders = ["Male", "Female"];
     if (widget.isUpdate) {
       if (widget.users != null) {
-        if (widget.users!.name != null) {
-          userName.text = widget.users!.name!;
+        if (widget.users!.firstName != null) {
+          firstName.text = widget.users!.firstName!;
         }
         if (widget.users!.dob != null) {
           dateofBirthController.text = widget.users!.dob!;
@@ -110,7 +113,7 @@ class _AddUpdateScreenState extends State<AddUpdateScreen> {
                   ),
                 );
               });
-            } 
+            }
             return Container(
               padding: EdgeInsets.all(20),
               child: SingleChildScrollView(
@@ -125,10 +128,44 @@ class _AddUpdateScreenState extends State<AddUpdateScreen> {
                         return null;
                       },
                       style: TextStyle(fontSize: 20, color: Colors.black),
-                      controller: userName,
+                      controller: firstName,
                       decoration: InputDecoration(
                           border: OutlineInputBorder(),
-                          labelText: "Name of User",
+                          labelText: "First Name",
+                          labelStyle: TextStyle(
+                              fontSize: 20,
+                              color: Colors.black54,
+                              fontWeight: FontWeight.bold)),
+                    ),
+                    SizedBox(
+                      height: 30,
+                    ),
+                    TextFormField(
+                      style: TextStyle(fontSize: 20, color: Colors.black),
+                      controller: middleName,
+                      decoration: InputDecoration(
+                          border: OutlineInputBorder(),
+                          labelText: "Middle Name",
+                          labelStyle: TextStyle(
+                              fontSize: 20,
+                              color: Colors.black54,
+                              fontWeight: FontWeight.bold)),
+                    ),
+                    SizedBox(
+                      height: 30,
+                    ),
+                    TextFormField(
+                      validator: (val) {
+                        if (val == "") {
+                          return "This is a required field";
+                        }
+                        return null;
+                      },
+                      style: TextStyle(fontSize: 20, color: Colors.black),
+                      controller: lastName,
+                      decoration: InputDecoration(
+                          border: OutlineInputBorder(),
+                          labelText: "Last Name",
                           labelStyle: TextStyle(
                               fontSize: 20,
                               color: Colors.black54,
@@ -138,12 +175,6 @@ class _AddUpdateScreenState extends State<AddUpdateScreen> {
                       height: 30,
                     ),
                     DateTimeField(
-                      validator: (val) {
-                        if (val == null) {
-                          return "This is a required field";
-                        }
-                        return null;
-                      },
                       decoration: InputDecoration(
                         border: OutlineInputBorder(),
                         labelText: "Date of Birth",
@@ -179,12 +210,12 @@ class _AddUpdateScreenState extends State<AddUpdateScreen> {
                       height: 30,
                     ),
                     DropdownButtonFormField(
-                      validator: (val) {
+                      /* validator: (val) {
                         if (val == null) {
                           return "This is a required field";
                         }
                         return null;
-                      },
+                      }, */
                       decoration: InputDecoration(border: OutlineInputBorder()),
                       hint: gender == null
                           ? Text('Select Gender')
@@ -258,6 +289,20 @@ class _AddUpdateScreenState extends State<AddUpdateScreen> {
                     SizedBox(
                       height: 30,
                     ),
+                    TextFormField(
+                      style: TextStyle(fontSize: 20, color: Colors.black),
+                      controller: partNo,
+                      decoration: InputDecoration(
+                          border: OutlineInputBorder(),
+                          labelText: "Part Number",
+                          labelStyle: TextStyle(
+                              fontSize: 20,
+                              color: Colors.black54,
+                              fontWeight: FontWeight.bold)),
+                    ),
+                    SizedBox(
+                      height: 30,
+                    ),
                     BlocBuilder<UserBloc, UserState>(
                       builder: (context, state) {
                         print("state: $state");
@@ -288,15 +333,21 @@ class _AddUpdateScreenState extends State<AddUpdateScreen> {
     context.read<UserBloc>().add(widget.isUpdate
         ? UserUpdated(
             user: User(
+                lastName: lastName.text,
+                middleName: middleName.text,
+                partNo: partNo.text,
                 code: widget.users!.code,
                 address: widget.users!.address,
-                dob: "${dateofBirthController.text}",
+                dob: dateofBirthController.text,
                 mobileNo: userMobileNo.text,
                 gender: gender,
-                name: userName.text),
+                firstName: firstName.text),
           )
         : UserAdded(
             user: User(
+                lastName: lastName.text,
+                middleName: middleName.text,
+                partNo: partNo.text,
                 code: "",
                 imageAsString: "",
                 isDeleted: false,
@@ -305,7 +356,7 @@ class _AddUpdateScreenState extends State<AddUpdateScreen> {
                 dob: dateofBirthController.text,
                 mobileNo: userMobileNo.text,
                 gender: gender,
-                name: userName.text),
+                firstName: firstName.text),
           ));
   }
 }

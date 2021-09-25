@@ -4,6 +4,19 @@ import 'package:evoter/models/user.dart';
 import 'package:http/http.dart' as http;
 
 class ApiProvider {
+  Future<bool> login(String mobileNo, String password) async {
+    String baseUrl = "http://www.anugat.com/api/NewUser";
+    final Uri baseUri = Uri.parse(baseUrl);
+    final response = await http.post(baseUri,
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(
+            <String, dynamic>{"MobileNo": mobileNo, "Password": password}));
+    print(response.body);
+    return response.statusCode == 200;
+  }
+
   Future<bool> addUser(User user) async {
     String baseUrl = "http://www.anugat.com/api/NewUser";
     final Uri baseUri = Uri.parse(baseUrl);
@@ -29,7 +42,8 @@ class ApiProvider {
   Future<bool> deleteUser(String userCode) async {
     String baseUrl = "http://www.anugat.com/api/DeleteUser";
     final Uri baseUri = Uri.parse(baseUrl);
-    final response = await http.post(baseUri,headers: <String, String>{
+    final response = await http.post(baseUri,
+        headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
         body: jsonEncode(<String, dynamic>{"Code": userCode}));

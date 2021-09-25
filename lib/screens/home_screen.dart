@@ -147,7 +147,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        buildRichText("Name: ", "${usersList[index]?.name}"),
+        buildRichText("Name: ", "${usersList[index]?.firstName}"),
         SizedBox(height: 20),
         buildRichText("Mobile No: ", "${usersList[index]?.mobileNo}"),
         SizedBox(height: 20),

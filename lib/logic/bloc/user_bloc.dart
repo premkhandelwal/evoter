@@ -27,6 +27,21 @@ class UserBloc extends Bloc<UserEvent, UserState> {
       yield* _mapUserUpdatedToState(event);
     } else if (event is UserDeleted) {
       yield* _mapUserDeletedToState(event);
+    } else if (event is LogIn) {
+      yield* _mapLoginToState(event);
+    }
+  }
+
+  Stream<UserState> _mapLoginToState(LogIn event) async* {
+    try {
+      bool loggedIn = await apiProvider.login(event.mobileNo, event.password);
+      if (loggedIn) {
+        yield UserLoggedIn();
+      } else {
+        yield UserLogInFailure();
+      }
+    } catch (e) {
+        yield UserLogInFailure();
     }
   }
 
@@ -44,7 +59,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
 
   Stream<UserState> _mapUserAddedToState(UserAdded event) async* {
     yield UserOperationInProgress();
-    
+
     try {
       final users = await this.apiProvider.addUser(event.user);
       yield users ? UserOperationSuccess() : UserOperationFailure();
