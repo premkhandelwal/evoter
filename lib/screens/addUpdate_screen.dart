@@ -1,6 +1,6 @@
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:evoter/logic/bloc/user_bloc.dart';
-import 'package:evoter/logic/cubit/checkbox_cubit.dart';
+import 'package:evoter/logic/checkBoxCubit/checkbox_cubit.dart';
 import 'package:evoter/models/sessionConstants.dart';
 import 'package:evoter/models/sharedObjects.dart';
 import 'package:evoter/models/user.dart';

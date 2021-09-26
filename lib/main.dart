@@ -1,4 +1,4 @@
-import 'package:evoter/logic/cubit/checkbox_cubit.dart';
+import 'package:evoter/logic/checkBoxCubit/checkbox_cubit.dart';
 import 'package:evoter/models/sessionConstants.dart';
 import 'package:evoter/models/sharedObjects.dart';
 import 'package:evoter/screens/loginScreen.dart';
