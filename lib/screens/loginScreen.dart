@@ -109,7 +109,7 @@ class _LoginScreenState extends State<LoginScreen>
                         height: 70,
                       ),
                       BlocConsumer<UserBloc, UserState>(
-                         listener: (context,state) {
+                        listener: (context, state) {
                           if (state is UserLoggedIn) {
                             Navigator.pushAndRemoveUntil(
                                 context,
@@ -117,6 +117,21 @@ class _LoginScreenState extends State<LoginScreen>
                                   builder: (context) => HomeScreen(),
                                 ),
                                 (route) => false);
+                          } else if (state is UserLogInFailure) {
+                            showDialog(
+                              context: context,
+                              builder: (ctx) => AlertDialog(
+                                actions: [
+                                  ElevatedButton(
+                                      onPressed: () {
+                                        Navigator.pop(ctx);
+                                      },
+                                      child: Text("Ok"))
+                                ],
+                                content: Text("Invalid credentials!"),
+                                title: Text("Error"),
+                              ),
+                            );
                           }
                         },
                         builder: (context, state) {

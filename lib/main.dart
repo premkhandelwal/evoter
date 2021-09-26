@@ -37,7 +37,7 @@ class MyApp extends StatelessWidget {
         
       ],
       child: MaterialApp(
-        title: 'Flutter Demo',
+        title: 'EVoter',
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
