@@ -6,6 +6,11 @@ import 'package:evoter/models/user.dart';
 import 'package:http/http.dart' as http;
 
 class ApiProvider {
+  Future<void> logOut() async {
+    await SharedObjects.prefs?.clearSession();
+    await SharedObjects.prefs?.clearAll();
+  }
+
   Future<bool> login(String mobileNo, String password) async {
     String baseUrl = "http://www.anugat.com/api/voterLogin";
     final Uri baseUri = Uri.parse(baseUrl);
@@ -15,7 +20,7 @@ class ApiProvider {
         },
         body: jsonEncode(
             <String, dynamic>{"MobileNo": mobileNo, "Password": password}));
-   
+
     await SharedObjects.prefs
         ?.setString(SessionConstants.sessionUid, response.body.split('"')[1]);
     return response.statusCode == 200;
@@ -55,7 +60,8 @@ class ApiProvider {
   }
 
   Future<dynamic> fetchAllUsers() async {
-    String baseUrl = "http://www.anugat.com/api/FetchAllUsers?AddedBy=${SharedObjects.prefs?.getString(SessionConstants.sessionUid)}";
+    String baseUrl =
+        "http://www.anugat.com/api/FetchAllUsers?AddedBy=${SharedObjects.prefs?.getString(SessionConstants.sessionUid)}";
     final Uri baseUri = Uri.parse(baseUrl);
     final response = await http.get(baseUri);
     print(response.statusCode);

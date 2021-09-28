@@ -29,16 +29,17 @@ class UserBloc extends Bloc<UserEvent, UserState> {
       yield* _mapUserDeletedToState(event);
     } else if (event is SignInRequested) {
       yield* _mapLoginToState(event);
+    } else if (event is LogOutRequested) {
+      yield* _mapLogoutToState();
     }
   }
 
   Stream<UserState> _mapLoginToState(SignInRequested event) async* {
     yield UserLoggingIn();
     try {
-      bool loggedIn =
-          await apiProvider.login(event.mobileNo, event.password);
+      bool loggedIn = await apiProvider.login(event.mobileNo, event.password);
       print(loggedIn);
-      if (loggedIn ) {
+      if (loggedIn) {
         yield UserLoggedIn();
       } else {
         yield UserLogInFailure();
@@ -49,6 +50,8 @@ class UserBloc extends Bloc<UserEvent, UserState> {
   }
 
   Stream<UserState> _mapUserLoadedToState() async* {
+    yield UsersLoadInProgress();
+    
     try {
       final users = await this.apiProvider.fetchAllUsers();
       yield UsersLoadSuccess(
@@ -88,5 +91,10 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     } catch (_) {
       yield UserOperationFailure();
     }
+  }
+
+  Stream<UserState> _mapLogoutToState() async* {
+    await apiProvider.logOut();
+    yield UserLoggedOut();
   }
 }

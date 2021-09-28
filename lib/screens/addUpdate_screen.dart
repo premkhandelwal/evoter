@@ -37,7 +37,7 @@ class _AddUpdateScreenState extends State<AddUpdateScreen> {
   List<String?> genders = ["Select Gender", "Male", "Female"];
   @override
   void initState() {
-    genders = ["Select Gender", "Male", "Female", null];
+    genders = ["Select Gender", "Male", "Female"];
     if (widget.isUpdate) {
       if (widget.users != null) {
         if (widget.users!.firstName != null) {
@@ -461,7 +461,7 @@ class _AddUpdateScreenState extends State<AddUpdateScreen> {
                 code: "",
                 imageAsString: "",
                 isDeleted: false,
-                isAdmin: checkBoxVal,
+                isAdmin: !checkBoxVal,
                 address: userAddress.text,
                 dob: dateofBirthController.text,
                 mobileNo: userMobileNo.text,

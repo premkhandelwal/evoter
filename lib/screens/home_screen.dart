@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:typed_data';
+import 'package:evoter/screens/loginScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:evoter/logic/bloc/user_bloc.dart';
@@ -41,6 +42,12 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // ImageSource imageSource;
   @override
+  void initState() {
+    context.read<UserBloc>().add(UserLoaded());
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return RefreshIndicator(
       onRefresh: () async {
@@ -61,7 +68,17 @@ class _HomeScreenState extends State<HomeScreen> {
           backgroundColor: Colors.red,
         ),
         body: SafeArea(
-          child: BlocBuilder<UserBloc, UserState>(
+          child: BlocConsumer<UserBloc, UserState>(
+            listener: (context, state) {
+              if (state is UserLoggedOut) {
+                Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => LoginScreen(),
+                    ),
+                    (route) => false);
+              }
+            },
             builder: (context, state) {
               print(state);
               if (state is UserOperationSuccess || state is UserDeleted) {
@@ -80,11 +97,28 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Text("Failed to load users"),
                 );
               }
-              return Center(
-                child: Text(
-                  "No users found",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
-                ),
+              return Column(
+                children: [
+                  Align(
+                      alignment: Alignment.centerRight,
+                      child: IconButton(
+                        padding: EdgeInsets.only(right: 30, top: 20),
+                        onPressed: () {
+                          context.read<UserBloc>().add(LogOutRequested());
+                        },
+                        icon: Icon(Icons.logout),
+                        alignment: Alignment.centerRight,
+                      )),
+                  Expanded(
+                    child: Center(
+                      child: Text(
+                        "No users found",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 25),
+                      ),
+                    ),
+                  ),
+                ],
               );
             },
           ),
@@ -245,9 +279,8 @@ class _ChildWidgetState extends State<ChildWidget> {
         usersList = usersList.where((user) {
           print(val);
           print(user!.mobileNo);
-          if(_val == SearchBy.MOBILENO){
-
-          return user.mobileNo!.startsWith(val);
+          if (_val == SearchBy.MOBILENO) {
+            return user.mobileNo!.startsWith(val);
           }
           return user.firstName!.startsWith(val);
         }).toList();
@@ -267,13 +300,25 @@ class _ChildWidgetState extends State<ChildWidget> {
                     title: new TextField(
                         controller: searchController,
                         decoration: new InputDecoration(
-                            suffixIcon: IconButton(
-                                onPressed: () {
-                                  showDialog(
-                                      context: context,
-                                      builder: (context) => AlertWidget());
-                                },
-                                icon: Icon(Icons.menu)),
+                            suffixIcon: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                IconButton(
+                                    onPressed: () {
+                                      showDialog(
+                                          context: context,
+                                          builder: (context) => AlertWidget());
+                                    },
+                                    icon: Icon(Icons.menu)),
+                                IconButton(
+                                    onPressed: () {
+                                      context
+                                          .read<UserBloc>()
+                                          .add(LogOutRequested());
+                                    },
+                                    icon: Icon(Icons.logout)),
+                              ],
+                            ),
                             hintText: _val == SearchBy.MOBILENO
                                 ? 'Search by Mobile No'
                                 : 'Search by Name',

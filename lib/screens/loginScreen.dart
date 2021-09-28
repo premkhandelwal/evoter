@@ -17,6 +17,7 @@ class _LoginScreenState extends State<LoginScreen>
   late TabController tabController;
   TextEditingController mobileNo = new TextEditingController();
   TextEditingController password = new TextEditingController();
+  bool obscure = true;
 
   @override
   void initState() {
@@ -86,8 +87,28 @@ class _LoginScreenState extends State<LoginScreen>
                         height: 40,
                       ),
                       TextFormField(
+                          obscureText: obscure,
+
                         controller: password,
                         decoration: InputDecoration(
+                          suffixIcon: GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      obscure = !obscure;
+                                    });
+                                  },
+                                  child: obscure
+                                      ? Icon(
+                                          Icons.visibility_off,
+                                          color: Colors.grey,
+                                          size: 25,
+                                        )
+                                      : Icon(
+                                          Icons.visibility,
+                                          color: Colors.grey,
+                                          size: 25,
+                                        )),
+
                             hintStyle: TextStyle(
                               color: Colors.white70,
                             ),

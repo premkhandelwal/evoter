@@ -35,6 +35,6 @@ class SignInRequested extends UserEvent{
   });
 }
 
-class LogOut extends UserEvent{}
+class LogOutRequested extends UserEvent{}
 
 
