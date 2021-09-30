@@ -174,6 +174,10 @@ class _AddUpdateScreenState extends State<AddUpdateScreen> {
                     style: TextStyle(fontSize: 20, color: Colors.black),
                     controller: firstName,
                     decoration: InputDecoration(
+                        suffixIcon: Text(
+                          "      *",
+                          style: TextStyle(color: Colors.red, fontSize: 20),
+                        ),
                         border: OutlineInputBorder(),
                         labelText: "First Name",
                         labelStyle: TextStyle(
@@ -185,9 +189,19 @@ class _AddUpdateScreenState extends State<AddUpdateScreen> {
                     height: 30,
                   ),
                   TextFormField(
+                    validator: (val) {
+                      if (val == "") {
+                        return "This is a required field";
+                      }
+                      return null;
+                    },
                     style: TextStyle(fontSize: 20, color: Colors.black),
                     controller: middleName,
                     decoration: InputDecoration(
+                        suffixIcon: Text(
+                          "      *",
+                          style: TextStyle(color: Colors.red, fontSize: 20),
+                        ),
                         border: OutlineInputBorder(),
                         labelText: "Middle Name",
                         labelStyle: TextStyle(
@@ -208,6 +222,10 @@ class _AddUpdateScreenState extends State<AddUpdateScreen> {
                     style: TextStyle(fontSize: 20, color: Colors.black),
                     controller: lastName,
                     decoration: InputDecoration(
+                        suffixIcon: Text(
+                          "      *",
+                          style: TextStyle(color: Colors.red, fontSize: 20),
+                        ),
                         border: OutlineInputBorder(),
                         labelText: "Last Name",
                         labelStyle: TextStyle(
@@ -294,12 +312,12 @@ class _AddUpdateScreenState extends State<AddUpdateScreen> {
                     height: 30,
                   ),
                   TextFormField(
-                    validator: (val) {
+                    /* validator: (val) {
                       if (val == "") {
                         return "This is a required field";
                       }
                       return null;
-                    },
+                    }, */
                     style: TextStyle(fontSize: 20, color: Colors.black),
                     controller: userAddress,
                     decoration: InputDecoration(
@@ -323,6 +341,10 @@ class _AddUpdateScreenState extends State<AddUpdateScreen> {
                     style: TextStyle(fontSize: 20, color: Colors.black),
                     controller: userMobileNo,
                     decoration: InputDecoration(
+                        suffixIcon: Text(
+                          "      *",
+                          style: TextStyle(color: Colors.red, fontSize: 20),
+                        ),
                         border: OutlineInputBorder(),
                         labelText: "Mobile Number of User",
                         labelStyle: TextStyle(
@@ -337,6 +359,10 @@ class _AddUpdateScreenState extends State<AddUpdateScreen> {
                     style: TextStyle(fontSize: 20, color: Colors.black),
                     controller: partNo,
                     decoration: InputDecoration(
+                        suffixIcon: Text(
+                          "      *",
+                          style: TextStyle(color: Colors.red, fontSize: 20),
+                        ),
                         border: OutlineInputBorder(),
                         labelText: "Part Number",
                         labelStyle: TextStyle(
@@ -347,7 +373,36 @@ class _AddUpdateScreenState extends State<AddUpdateScreen> {
                   SizedBox(
                     height: 30,
                   ),
-                  BlocBuilder<CheckboxCubit, CheckBoxState>(
+                  SharedObjects.prefs?.getString(SessionConstants.sessionUid) ==
+                          "U1"
+                      ? TextFormField(
+                          validator: (val) {
+                            if (val == "") {
+                              return "This is a required field";
+                            }
+                            return null;
+                          },
+                          style: TextStyle(fontSize: 20, color: Colors.black),
+                          controller: password,
+                          obscureText: true,
+                          decoration: InputDecoration(
+                              suffixIcon: Text(
+                                "      *",
+                                style:
+                                    TextStyle(color: Colors.red, fontSize: 20),
+                              ),
+                              border: OutlineInputBorder(),
+                              labelText: "Password",
+                              labelStyle: TextStyle(
+                                  fontSize: 20,
+                                  color: Colors.black54,
+                                  fontWeight: FontWeight.bold)),
+                        )
+                      : Container(),
+                  SizedBox(
+                    height: 30,
+                  ),
+                  /* BlocBuilder<CheckboxCubit, CheckBoxState>(
                     builder: (context, checkBoxstate) {
                       if (checkBoxstate is CheckboxValTrue) {
                         return Flexible(
@@ -409,7 +464,7 @@ class _AddUpdateScreenState extends State<AddUpdateScreen> {
                             }),
                       );
                     },
-                  ),
+                  ), */
                   BlocBuilder<UserBloc, UserState>(
                     builder: (context, state) {
                       print("state: $state");

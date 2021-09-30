@@ -76,7 +76,7 @@ class CurrentUser {
         isAdmin: map['isAdmin'],
         addedBy: map['addedBy'],
         imageAsString: map["userImageString"],
-        password: map['password']
+        password: map['password'],
         //isDeleted: map['isDeleted'],
         );
   }
